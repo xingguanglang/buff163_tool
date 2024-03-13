@@ -17,13 +17,13 @@ def convert_dictlist_to_buff_item(dictlist:list[dict]):
 def write_item_to_json(items:list[item],filepath="json/storage.json"):
     temp = []
     for test in items:
+        
         temp.append({"name":test.name,"wear":test.wear,"price":test.price,"time":test.time})
     with open(filepath,'w',encoding="utf-8") as f:
         for x in temp:
             tmp = json.dumps(x,ensure_ascii=False)
             f.write(tmp+'\n')
     f.close()
-
 
 def write_buff_item_to_json(buff_items:list[buff_item],filepath="json/buff_item.json"):
     temp = []
