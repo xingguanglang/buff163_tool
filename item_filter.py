@@ -1,8 +1,8 @@
 from playwright.sync_api import sync_playwright,TimeoutError
 from utils_storage import read_item_from_json, write_item_to_json,read_buff_item_from_json
 from utils_operation import remove_redundancy
-from item import item,buff_item
-from find_url import generate_goods_url
+from item import item,buff_item,deep_partition
+from find_url import generate_goods_url,generate_goods_url_list
 from datetime import datetime
 from time import time,sleep
 
@@ -40,6 +40,40 @@ def generate_item_list_from_buff_item(buff_item:buff_item, selector:str = '#mark
         print(f"花费时间:{time()-start}s")
     return result
 
+def generate_item_list_from_deep_partition(deep_partition:deep_partition, selector:str = '#market-selling-list > tbody>.selling',usr_data_dir = "browser_buffer/chrome"):
+    urls = generate_goods_url_list(deep_partition=deep_partition)
+    print(urls)
+    buff_item = deep_partition #懒得改变量了
+    with sync_playwright() as p:
+        for x in urls:
+            print("url:",x)
+            start = time()
+            browser = p.chromium.launch_persistent_context(usr_data_dir,headless=True)
+            page = browser.new_page()
+            page.goto(x)
+            result = []
+            try:
+                page.wait_for_selector(selector,timeout=2500)
+            except(TimeoutError):
+                sleep(sleeptime)
+                page.reload()
+                try:
+                    page.wait_for_selector(selector,timeout=2500)
+                except(TimeoutError):
+                    print(f"找不到元素: 名字:{buff_item.name}, buff_id:{buff_item.buff_id}, 等级:{buff_item.rarity}, 外观:{buff_item.exterior}, 收藏品:{buff_item.itemset}, 花费时间:{time()-start}s")
+                    return 1
+            value = page.locator(selector).all()
+            
+            print(f"找到元素: 名字:{buff_item.name}, buff_id:{buff_item.buff_id}, 等级:{buff_item.rarity}, 外观:{buff_item.exterior}, 收藏品:{buff_item.itemset}")
+            for i in value:
+                a = i.locator("td:nth-child(3) > div > div.csgo_value > div.wear-value").inner_text().split(" ")[1]
+                b = i.locator(" td:nth-child(5) > div:nth-child(1) > strong").inner_text().split(" ")[1]
+                c = datetime.now().strftime("%Y-%m-%d,%H:%M:%S")
+                print(f"价格:{b}, 磨损:{a}")
+                tmp = item(buff_item.name,float(a),float(b),c)
+                result.append(tmp)
+            print(f"花费时间:{time()-start}s")
+    return result
 
 
 if __name__ == '__main__':
