@@ -46,7 +46,7 @@ class buff_item(object):
     def show_info(self):
         print(f"name:{self.name}, exterior:{self.exterior}, buff_id:{self.buff_id}, itemset:{self.itemset}, rarity:{self.rarity}")
     
-class buff_item_deep_partition(object):
+class deep_partition(object):
     def __init__(self,interval):
         super().__init__()
         self.wear_check_list = []
