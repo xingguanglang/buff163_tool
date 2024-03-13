@@ -42,16 +42,15 @@ def generate_item_list_from_buff_item(buff_item:buff_item, selector:str = '#mark
 
 def generate_item_list_from_deep_partition(deep_partition:deep_partition, selector:str = '#market-selling-list > tbody>.selling',usr_data_dir = "browser_buffer/chrome"):
     urls = generate_goods_url_list(deep_partition=deep_partition)
-    print(urls)
     buff_item = deep_partition #懒得改变量了
     with sync_playwright() as p:
+        result = []
         for x in urls:
             print("url:",x)
             start = time()
             browser = p.chromium.launch_persistent_context(usr_data_dir,headless=True)
             page = browser.new_page()
             page.goto(x)
-            result = []
             try:
                 page.wait_for_selector(selector,timeout=2500)
             except(TimeoutError):
@@ -74,6 +73,8 @@ def generate_item_list_from_deep_partition(deep_partition:deep_partition, select
                 result.append(tmp)
             print(f"花费时间:{time()-start}s")
     return result
+
+
 
 
 if __name__ == '__main__':
