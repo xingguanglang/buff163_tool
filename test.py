@@ -1,11 +1,13 @@
-
-
-class buff_item_deep_partition(object):
-    def __init__(self,interval):
-        super().__init__()
-        self.wear_check_list = []
-        self.max_wear = 0.1499
-        self.min_wear = 0.07
-        for i in range(int((self.max_wear-self.min_wear)/interval)):
-            self.wear_check_list.append(f"{'{:.3f}'.format(i*interval+self.min_wear)}")
-        self.wear_check_list.append(self.max_wear)
+from find_url import generate_goods_url_list
+from item import buff_item,deep_partition
+from utils_storage import read_buff_item_from_json
+from item_filter import generate_item_list_from_buff_item
+a = read_buff_item_from_json()[0]
+b = deep_partition(a,0.01)
+c = generate_goods_url_list(b)
+# print(a)
+# print(a.max_wear)
+for i in b.wear_check_list:
+    print(i)
+    c = generate_item_list_from_buff_item(i)
+    

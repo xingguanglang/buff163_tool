@@ -46,12 +46,11 @@ class buff_item(object):
     def show_info(self):
         print(f"name:{self.name}, exterior:{self.exterior}, buff_id:{self.buff_id}, itemset:{self.itemset}, rarity:{self.rarity}")
     
-class deep_partition(object):
-    def __init__(self,interval):
-        super().__init__()
+class deep_partition(buff_item):
+    def __init__(self,buff_item:buff_item,interval=0.01):
         self.wear_check_list = []
-        self.max_wear = 0.1499
-        self.min_wear = 0.07
-        for i in range(int((self.max_wear-self.min_wear)/interval)):
+        super().__init__(buff_id=buff_item.buff_id,name=buff_item.name,exterior=buff_item.exterior,itemset=buff_item.itemset,rarity=buff_item.rarity)
+        
+        for i in range(int((self.max_wear-self.min_wear)/interval)+1):
             self.wear_check_list.append(f"{'{:.3f}'.format(i*interval+self.min_wear)}")
-        self.wear_check_list.append(self.max_wear)
+        self.wear_check_list.append(f"{'{:.3f}'.format(self.max_wear)}")
