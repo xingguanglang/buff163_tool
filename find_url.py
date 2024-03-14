@@ -10,7 +10,7 @@ def generate_goods_url(buff_item:buff_item,tab:str="selling",page_num:int=1,sort
     return url
 
 def generate_goods_url_list(deep_partition:deep_partition,tab:str="selling",page_num:int=1,sort_by:str="price.asc"):
-    buff_id = deep_partition.buff_id
+    buff_id = deep_partition.buff_item.buff_id
     result = []
     for i in range(len(deep_partition.wear_check_list)-1):
         min_wear = deep_partition.wear_check_list[i] 
