@@ -49,6 +49,8 @@ class buff_item(object):
 class deep_partition(buff_item):
     def __init__(self,buff_item:buff_item,interval=0.01):
         self.wear_check_list = []
+        self.buff_item = buff_item
+        self.interval = interval
         super().__init__(buff_id=buff_item.buff_id,name=buff_item.name,exterior=buff_item.exterior,itemset=buff_item.itemset,rarity=buff_item.rarity)
         
         for i in range(int((self.max_wear-self.min_wear)/interval)+1):
