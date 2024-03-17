@@ -1,12 +1,18 @@
 import json
-from item import item,buff_item,deep_partition
+from item import item,buff_item,deep_partition,itemset,create_itemset_by_listing
 from datetime import datetime
 from os import listdir
+
 def convert_dictlist_to_item(dictlist:list[dict]):
     result = []
     for i in dictlist:
         result.append(item(i['name'],i['wear'],i['price'],i['time']))
     return result
+
+def convert_dictlist_to_itemset(dictlist:list[dict]):
+    i = dictlist
+    return create_itemset_by_listing(i['name'],i['coverts'],i['classified'],i['restricted'],i['mil_spec'],i['industrials'],i['consumers'])
+    
 
 def convert_dictlist_to_buff_item(dictlist:list[dict]):
     result = []
@@ -23,10 +29,17 @@ def convert_dictlist_to_deep_partition(dictlist:list[dict]):
 
 def write_item_to_json(items:list[item],filedir="json/",filename="items"):
     namedic = {}
+    wears = []
     for test in items:
-        if test.name not in namedic.keys():
-            namedic[test.name] = []
-        namedic[test.name].append({"name":test.name,"wear":test.wear,"price":test.price,"time":test.time})
+        if test.wear not in wears:
+            wears.append(test.wear)
+    wears.sort()
+    for i in wears:
+        for test in items:
+            if test.wear == i:
+                if test.name not in namedic.keys():
+                    namedic[test.name] = []
+                namedic[test.name].append({"name":test.name,"wear":float(test.wear),"price":test.price,"time":test.time})
     for x in namedic.keys():
         # filepath = filedir + filename + "_" + x +datetime.now().strftime("-%Y-%m-%d_%H_%M_%S.json")
         filepath = filedir + filename + "_" + x +"_.json"
@@ -36,17 +49,48 @@ def write_item_to_json(items:list[item],filedir="json/",filename="items"):
                 f.write(tmp+'\n')
         f.close()
 
-def write_buff_item_to_json(buff_items:list[buff_item],filedir="json/",filename="buff_items"):
+def write_itemset_to_json(itemsets:list[itemset],filedir="json/",filename="sets"):
     namedic = {}
-    for test in buff_items:
+    for test in itemsets:
+        test.flatten()
         if test.name not in namedic.keys():
             namedic[test.name] = []
-        namedic[test.name].append({'name':test.name,'exterior':test.exterior,"buff_id":test.buff_id,"itemset":test.itemset,"rarity":test.rarity})
+        namedic[test.name].append({"name":test.name,"coverts":test.coverts,"classified":test.classified,"restricted":test.restricted,"mil_spec":test.mil_specs,"industrials":test.industrials,"consumers":test.consummers})
     for x in namedic.keys():
         # filepath = filedir + filename + "_" + x +datetime.now().strftime("-%Y-%m-%d_%H_%M_%S.json")
         filepath = filedir + filename + "_" + x +"_.json"
         with open(filepath,'w',encoding="utf-8") as f:
             for i in namedic[x]:
+
+                tmp = json.dumps(i,ensure_ascii=False)
+                f.write(tmp+'\n')
+        f.close()
+
+def write_buff_item_to_json(buff_items:list[buff_item],filedir="json/",filename="buff_items"):
+    namedic = {}
+    for test in buff_items:
+        filepath = filedir + filename + "_" + test.name +"_.json"
+        buffer = read_buff_item_from_json(filepath)
+        idlist = []
+        if buffer != -1:
+            for i in buffer:
+                idlist.append(i.buff_id)
+        if test.name not in namedic.keys():
+            namedic[test.name] = []
+        if test.buff_id not in idlist:
+            namedic[test.name].append({'name':test.name,'exterior':test.exterior,"buff_id":test.buff_id,"itemset":test.itemset,"rarity":test.rarity})
+        if buffer != -1:
+            for temp in buffer:
+
+                namedic[test.name].append({'name':temp.name,'exterior':temp.exterior,"buff_id":temp.buff_id,"itemset":temp.itemset,"rarity":temp.rarity})
+
+    for x in namedic.keys():
+        # filepath = filedir + filename + "_" + x +datetime.now().strftime("-%Y-%m-%d_%H_%M_%S.json")
+        filepath = filedir + filename + "_" + x +"_.json"
+        
+        with open(filepath,'w',encoding="utf-8") as f:
+            for i in namedic[x]:
+
                 tmp = json.dumps(i,ensure_ascii=False)
                 f.write(tmp+'\n')
         f.close()
@@ -98,6 +142,22 @@ def read_deep_partition_from_all_json(filedir = "json/"):
     result = convert_dictlist_to_deep_partition(result)
     return result
 
+def read_itemset_from_json(filepath = "json/set.json"):
+    # try:
+        with open(filepath,'r',encoding="utf-8") as f:
+            tmp = f.read().split('\n')[:-1:]
+        for x in tmp:
+            result = json.loads(x)
+        print(result)
+        result = convert_dictlist_to_itemset(result)
+        print(type(result))
+        f.close()
+    # except:
+        # print(filepath)
+        return result
+        
+    # return result
+
 def read_item_from_json(filepath = "json/storage.json"):
     result = []
     try:
@@ -122,7 +182,7 @@ def read_buff_item_from_json(filepath="json/buff_item.json"):
         result = convert_dictlist_to_buff_item(result)
         f.close()
     except:
-        return result
+        return -1
         
     return result
 
@@ -141,3 +201,7 @@ def read_buff_item_from_all_json(filedir = "json/"):
                 return result
     result = convert_dictlist_to_buff_item(result)
     return result
+
+if __name__ == "__main__":
+    a = read_buff_item_from_json("json/buff_items_双持贝瑞塔 | 血红蛋白 _.json")
+    write_buff_item_to_json(a)

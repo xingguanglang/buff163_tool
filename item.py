@@ -1,3 +1,4 @@
+
 class item(object):
     def __init__(self,name,wear,price,time):
         self.name = name
@@ -45,7 +46,74 @@ class buff_item(object):
 
     def show_info(self):
         print(f"name:{self.name}, exterior:{self.exterior}, buff_id:{self.buff_id}, itemset:{self.itemset}, rarity:{self.rarity}")
-    
+
+class itemset(object):
+
+
+    def __init__(self,itemset_name:str,buff_items:list[buff_item]):
+        self.name = itemset_name
+        self.coverts = []
+        self.classified = []
+        self.restricted = []
+        self.mil_specs = []
+        self.industrials = []
+        self.consummers = []
+        element = []
+        for i in buff_items:
+            if i.itemset == itemset_name:
+                element.append(i)
+        for i in element:
+            if i.rarity == "隐蔽":
+                self.coverts. append(i)
+            elif i.rarity == "保密":
+                self.classified.append(i)
+            elif i.rarity == "受限":
+                self.restricted. append(i)
+            elif i.rarity == "军规级":
+                self.mil_specs. append(i)
+            elif i.rarity == "工业级":
+                self.industrials. append(i)
+            elif i.rarity == "消费级":
+                self.consummers. append(i)
+
+    def flatten(self):
+        temp = []
+        for i in self.coverts:
+            if i.name not in temp:
+                temp.append(i.name)
+
+        self.coverts = temp
+        temp = []
+
+        for i in self.classified:
+            if i.name not in temp:
+                temp.append(i.name)
+        self.classified = temp
+        temp = []
+        for i in self.restricted:
+            if i.name not in temp:
+                temp.append(i.name)
+        self.restricted = temp
+        temp = []
+
+        for i in self.mil_specs:
+            if i.name not in temp:
+                temp.append(i.name)
+        self.mil_specs = temp
+        temp = []
+
+        for i in self.industrials:
+            if i.name not in temp:
+                temp.append(i.name)
+        self.industrials = temp
+        temp = []
+
+        for i in self.consummers:
+            if i.name not in temp:
+                temp.append(i.name)
+        self.consummers = temp
+        return
+
 class deep_partition(buff_item):
     def __init__(self,buff_item:buff_item,interval=0.01):
         self.wear_check_list = []
@@ -56,3 +124,13 @@ class deep_partition(buff_item):
         for i in range(int((self.max_wear-self.min_wear)/interval)+1):
             self.wear_check_list.append(f"{'{:.3f}'.format(i*interval+self.min_wear)}")
         self.wear_check_list.append(f"{'{:.3f}'.format(self.max_wear)}")
+    
+def create_itemset_by_listing(name:str,covert:list,classified:list,restricted:list,mil_spec:list,industrials:list,consumers:list):
+    result = itemset(name,[])
+    result.coverts = covert
+    result.classified = classified
+    result.restricted = restricted
+    result.mil_specs = mil_spec
+    result.industrials = industrials
+    result.consumers = consumers
+    return result
