@@ -1,10 +1,8 @@
 from item import buff_item,deep_partition
-from utils_storage import write_deep_partition_to_json,read_buff_item_from_json
-
+from utils_storage import write_deep_partition_to_json,read_buff_item_from_json,read_buff_item_from_all_json,read_deep_partition_from_all_json
 def create_deep_partition_from_buff_item_list(buff_item_list:list[buff_item],interval = -1):
     result = []
     for i in buff_item_list:
-        print(interval)
         if interval == -1:
             if i.exterior == "崭新出厂":
                 result.append(deep_partition(i,0.01))
@@ -20,7 +18,14 @@ def create_deep_partition_from_buff_item_list(buff_item_list:list[buff_item],int
     return result
 
 if __name__ == "__main__":
-    a = read_buff_item_from_json("json/buff_items_SSG 08 | 炎龙之焰 _.json")
-    print(a)
-    b = create_deep_partition_from_buff_item_list(a)
-    print(b[0].interval,b[1].interval,b[1].exterior)
+    a = read_buff_item_from_all_json()
+    # print(len(a))
+    # for i in a:
+    #     print(i.name,i.exterior)
+    # b = read_deep_partition_from_all_json()
+    # print(len(b))
+
+
+    for i in a:
+        b = create_deep_partition_from_buff_item_list([i],interval=-1)
+        print(b[0].name,b[0].interval,b[0].interval,b[0].exterior)

@@ -25,7 +25,6 @@ class buff_item(object):
         self.exterior = exterior
         self.itemset = itemset
         self.rarity = rarity
-
         if exterior == "崭新出厂":
             self.min_wear = 0.00
             self.max_wear = 0.06999
@@ -125,6 +124,15 @@ class deep_partition(buff_item):
             self.wear_check_list.append(f"{'{:.3f}'.format(i*interval+self.min_wear)}")
         self.wear_check_list.append(f"{'{:.3f}'.format(self.max_wear)}")
     
+
+class tradeupitem(object):
+    def __init__(self,buff_item:buff_item,wear,min_wear,max_wear):
+        self.name = buff_item.name
+        self.itemset = buff_item.itemset
+        self.wear = wear
+        self.min_wear = min_wear
+        self.max_wear = max_wear
+
 def create_itemset_by_listing(name:str,covert:list,classified:list,restricted:list,mil_spec:list,industrials:list,consumers:list):
     result = itemset(name,[])
     result.coverts = covert

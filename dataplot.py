@@ -16,7 +16,7 @@ def plot_graphsets_of(items:list[item]):
     # 第二个散点图
     axs[1].scatter(wears, slopes)
     axs[1].set_xlabel('wear')
-    axs[1].set_ylabel('price per wear')
+    axs[1].set_ylabel('p/w')
 
     axs[2].scatter(wears, logs)
     axs[2].set_xlabel('wear')

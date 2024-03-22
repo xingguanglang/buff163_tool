@@ -1,8 +1,16 @@
 import json
-from item import item,buff_item,deep_partition,itemset,create_itemset_by_listing
+from item import item,buff_item,deep_partition,itemset,create_itemset_by_listing,tradeupitem
 from datetime import datetime
 from os import listdir
-
+def convert_dictlist_to_tradeupitem(dictlist:list[dict]):
+    result = []
+    for i in dictlist:
+        name = i['name']
+        # print("json/buff_items_"+name+" _.json")
+        c = read_buff_item_from_json("json/buff_items_"+name+" _.json")[0]
+        result.append(tradeupitem(c,-1,i['minwear'],i['maxwear']))
+    # print("result:",result)
+    return result
 def convert_dictlist_to_item(dictlist:list[dict]):
     result = []
     for i in dictlist:
@@ -30,6 +38,16 @@ def convert_dictlist_to_deep_partition(dictlist:list[dict]):
 def write_item_to_json(items:list[item],filedir="json/",filename="items"):
     namedic = {}
     wears = []
+    filepath = filedir + filename + "_" + items[0].name +"_.json"
+    buffer = read_item_from_json(filepath)
+    items_wear = [e.wear for e in items]
+    temp = []
+    if buffer != -1:
+        for test in buffer:
+            if test.wear not in items_wear:
+                temp.append(test)
+    items = temp + items
+
     for test in items:
         if test.wear not in wears:
             wears.append(test.wear)
@@ -40,6 +58,8 @@ def write_item_to_json(items:list[item],filedir="json/",filename="items"):
                 if test.name not in namedic.keys():
                     namedic[test.name] = []
                 namedic[test.name].append({"name":test.name,"wear":float(test.wear),"price":test.price,"time":test.time})
+    
+    
     for x in namedic.keys():
         # filepath = filedir + filename + "_" + x +datetime.now().strftime("-%Y-%m-%d_%H_%M_%S.json")
         filepath = filedir + filename + "_" + x +"_.json"
@@ -97,6 +117,35 @@ def write_buff_item_to_json(buff_items:list[buff_item],filedir="json/",filename=
     return
 
 def write_deep_partition_to_json(deep_partitions:list[deep_partition],filedir="json/",filename="deep_partitions"):
+    
+    namedic = {}
+    for test in deep_partitions:
+        filepath = filedir + filename + "_" + test.name +"_.json"
+        buffer = read_deep_partition_from_json(filepath)
+        idlist = []
+        if buffer != -1:
+            for i in buffer:
+                idlist.append(i.buff_id)
+        if test.name not in namedic.keys():
+            namedic[test.name] = []
+        if test.buff_id not in idlist:
+            namedic[test.name].append({'name':test.name,'exterior':test.exterior,"buff_id":test.buff_id,"itemset":test.itemset,"rarity":test.rarity,"interval":test.interval})
+        if buffer != -1:
+            for temp in buffer:
+                namedic[test.name].append({'name':temp.name,'exterior':temp.exterior,"buff_id":temp.buff_id,"itemset":temp.itemset,"rarity":temp.rarity,"interval":temp.interval})
+
+    for x in namedic.keys():
+        # filepath = filedir + filename + "_" + x +datetime.now().strftime("-%Y-%m-%d_%H_%M_%S.json")
+        filepath = filedir + filename + "_" + x +"_.json"
+        
+        with open(filepath,'w',encoding="utf-8") as f:
+            for i in namedic[x]:
+
+                tmp = json.dumps(i,ensure_ascii=False)
+                f.write(tmp+'\n')
+        f.close()
+
+def write_deep_partition_to_json1(deep_partitions:list[deep_partition],filedir="json/",filename="deep_partitions"):
 
     namedic = {}
     for test in deep_partitions:
@@ -111,6 +160,21 @@ def write_deep_partition_to_json(deep_partitions:list[deep_partition],filedir="j
                 tmp = json.dumps(i,ensure_ascii=False)
                 f.write(tmp+'\n')
         f.close()
+def read_wear_list(filepath="wear_list.json"):
+    result = []
+    try:
+        with open(filepath,'r',encoding="utf-8") as f:
+            tmp = f.read().split('\n')[:-1:]
+        for x in tmp:
+            result.append(json.loads(x))
+        result = convert_dictlist_to_tradeupitem(result)
+        # print(111111)
+        f.close()
+    except:
+        return result
+        
+    return result
+
 
 def read_deep_partition_from_json(filepath="json/deep_partition.json"):
     result = []
@@ -142,19 +206,31 @@ def read_deep_partition_from_all_json(filedir = "json/"):
     result = convert_dictlist_to_deep_partition(result)
     return result
 
+def read_itemset_from_all_json(filedir = "json/"):
+    result = [ ]
+    x = listdir(filedir)
+    for i in x:
+        if i[0] == "s":        
+            try:
+                with open(filedir+i,'r',encoding="utf-8") as f:
+                    tmp = f.read().split('\n')[:-1:]
+                f.close()
+                for y in tmp:
+                    result.append(json.loads(y))
+            except:
+                return result
+    result = convert_dictlist_to_itemset(result)
+    return result
+
+
 def read_itemset_from_json(filepath = "json/set.json"):
-    # try:
-        with open(filepath,'r',encoding="utf-8") as f:
-            tmp = f.read().split('\n')[:-1:]
-        for x in tmp:
-            result = json.loads(x)
-        print(result)
-        result = convert_dictlist_to_itemset(result)
-        print(type(result))
-        f.close()
-    # except:
-        # print(filepath)
-        return result
+    with open(filepath,'r',encoding="utf-8") as f:
+        tmp = f.read().split('\n')[:-1:]
+    for x in tmp:
+        result = json.loads(x)
+    result = convert_dictlist_to_itemset(result)
+    f.close()
+    return result
         
     # return result
 
@@ -168,7 +244,7 @@ def read_item_from_json(filepath = "json/storage.json"):
         result = convert_dictlist_to_item(result)
         f.close()
     except:
-        return result
+        return -1
         
     return result
 
@@ -187,7 +263,7 @@ def read_buff_item_from_json(filepath="json/buff_item.json"):
     return result
 
 def read_buff_item_from_all_json(filedir = "json/"):
-    result = [ ]
+    result = []
     x = listdir(filedir)
     for i in x:
         if i[0] == "b":        
