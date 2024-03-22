@@ -56,9 +56,8 @@ def generate_item_list_from_buff_item(buff_item:buff_item, selector:str = '#mark
 def generate_item_list_from_deep_partition(deep_partition,selector:str = '#market-selling-list > tbody>.selling',usr_data_dir = "browser_buffer/chrome"):
     urls = generate_goods_url_list(deep_partition)
     result = []
-    password="Asd12345"
-    account = "13197425867"
-
+    password = 1
+    account = 1
     selector6 = "//iframe[contains(@id, 'x-URS-ifram')]"
     selector1 = "//input[contains(@spellcheck,'false') and contains(@type,'tel')]"
     selector2 = "//input[contains(@spellcheck,'false') and contains(@type,'password')]"
