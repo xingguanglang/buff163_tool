@@ -10,3 +10,5 @@
 4. 打开market_filter.py, 修改想要的元素列表 (看不懂就不改), 运行. 该程序会在**json**文件夹中生成**buff_item.json** 文件
 5. 打开main.py 并运行. 该程序会在**json**文件夹中生成**storage.json**文件
 **之前版本,现在可能无法使用**
+
+wear_list: 所有箱子物品(除了办公室收藏品)对应的最大最小磨损,数据取自csgola
