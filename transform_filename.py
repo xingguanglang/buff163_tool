@@ -39,4 +39,4 @@ def recovername(filedir):
         rename(filedir+i,filedir+tmp)
 
 if __name__ == "__main__":
-    recovername("/users/huoxingwangyou/downloads/buff163_tool-main/json/")
+    recovername("json/")
