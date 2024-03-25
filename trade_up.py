@@ -78,12 +78,13 @@ def tradeup(itemlist:list[item]):
     result = calculate_output_possibility(temp[2],temp2)
     return result
 
-a = read_item_from_json("json/items_法玛斯 | 奈芙蒂斯之河 _.json")
+if __name__ == "__main__":
+    a = read_item_from_json("json/items_法玛斯 | 奈芙蒂斯之河 _.json")
 
-a = [a[0]]*5
-a2 = read_item_from_json("json/items_AUG | 湖怪鸟 _.json")
-a2 = [a2[2]]*5
-print(a[0].wear)
-print(a2[0].wear)
-result = tradeup(a+a2)
-print(result)
+    a = [a[0]]*5
+    a2 = read_item_from_json("json/items_AUG | 湖怪鸟 _.json")
+    a2 = [a2[2]]*5
+    print(a[0].wear)
+    print(a2[0].wear)
+    result = tradeup(a+a2)
+    print(result)
