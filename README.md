@@ -13,4 +13,4 @@
 ## 3.25更新
 
 1. 解决安装项目于windows系统会出现json文件命名错误的问题, 解决方法为运行transform_filename.py
-2. 1
+2. 
