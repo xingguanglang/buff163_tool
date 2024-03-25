@@ -1,10 +1,11 @@
 
 class item(object):
-    def __init__(self,name,wear,price,time):
+    def __init__(self,name,wear,price,itemset,time):
         self.name = name
         self.wear = wear
         self.price = price
         self.time = time
+        self.itemset = itemset
     def show_info(self):
         print("枪类：",self.name,"磨损：",self.wear,"价格：",self.price,"获取时间：",self.time)
 
@@ -126,10 +127,10 @@ class deep_partition(buff_item):
     
 
 class tradeupitem(object):
-    def __init__(self,buff_item:buff_item,wear,min_wear,max_wear):
+    def __init__(self,buff_item:buff_item,item:item,min_wear,max_wear):
         self.name = buff_item.name
         self.itemset = buff_item.itemset
-        self.wear = wear
+        self.item = item
         self.min_wear = min_wear
         self.max_wear = max_wear
 

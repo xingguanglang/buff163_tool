@@ -11,8 +11,8 @@ from time import sleep
 with sync_playwright() as p:
     password="" #自己填
     account = ""
-    browser = p.chromium.launch_persistent_context("browser_buffer/chrome",headless=False)
-    # browser = p.chromium.launch_per(headless=False)
+    # browser = p.chromium.launch_persistent_context("browser_buffer/chrome",headless=False)
+    browser = p.chromium.launch(headless=False)
     page = browser.new_page()
     page.goto("https://buff.163.com/market/csgo#game=csgo&page_num=1&rarity=common_weapon&quality=normal&exterior=wearcategory4&itemset=set_assault&tab=selling")
     # a = page.get_by_text("Login with SMS" or "短信快捷登录").inner_html()

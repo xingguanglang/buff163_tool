@@ -5,9 +5,12 @@ from find_url import generate_goods_url,generate_goods_url_list
 from datetime import datetime
 from time import time,sleep
 import threading
-sleeptime = 5
+from random import randint
+global sleeptime
+sleeptime = 10
 
 def generate_item_list_from_buff_item(buff_item:buff_item, selector:str = '#market-selling-list > tbody>.selling',usr_data_dir = "browser_buffer/chrome"):
+    global sleeptime
     url = generate_goods_url(buff_item)
     print("url:",url)
     with sync_playwright() as p:
@@ -54,10 +57,12 @@ def generate_item_list_from_buff_item(buff_item:buff_item, selector:str = '#mark
     return result
 
 def generate_item_list_from_deep_partition(deep_partition,selector:str = '#market-selling-list > tbody>.selling',usr_data_dir = "browser_buffer/chrome"):
+    global sleeptime
     urls = generate_goods_url_list(deep_partition)
     result = []
-    password = 1
+    password= 1
     account = 1
+
     selector6 = "//iframe[contains(@id, 'x-URS-ifram')]"
     selector1 = "//input[contains(@spellcheck,'false') and contains(@type,'tel')]"
     selector2 = "//input[contains(@spellcheck,'false') and contains(@type,'password')]"
@@ -156,6 +161,7 @@ def create_item_lists_from_buff_item_list(buff_item_list:list[buff_item]):
 
 #parallel 
 def create_item_lists_from_deep_partition_list(deep_partition_list:list[deep_partition],l_lens,total_cnt):
+    global sleeptime
     value = []
     lock = threading.Lock()
     threads = []
@@ -170,12 +176,13 @@ def create_item_lists_from_deep_partition_list(deep_partition_list:list[deep_par
         # 
             except:
                 print("error2")
-    cnt = 0
+    cnt = 1
     for i in deep_partition_list:
     
         t = threading.Thread(target=process_partition,args=(i,cnt))
         t.start()
         threads.append(t)
+        sleep(1)
         cnt += 1
     
     for t in threads:
@@ -186,18 +193,24 @@ def create_item_lists_from_deep_partition_list(deep_partition_list:list[deep_par
 
 
 def create_item_main(dp_list:list[deep_partition]):
+    global sleeptime
     count = 0
-    tmp = [dp_list[0]]
+    tmp = [dp_list[-1]]
     result = []
     cnt = 0
-    for i in dp_list[1:] :
+    for i in dp_list:
         cnt +=1
-        if count<2: #n+1线程
+        if count<3: #n+1线程
             tmp.append(i)
             count += 1
         else:
+            start = time()
             result.append(create_item_lists_from_deep_partition_list(tmp,len(dp_list),cnt))
-            sleep(20)
+            print(f"花费时间{time()-start}s, sleeptime:{sleeptime}s, 剩余完成时间: {(time()-start)*(len(urls)-cnt)}s")
+            sleep(sleeptime)
+            sleeptime = sleeptime + randint(-1,1)
+            if sleeptime <2 or sleeptime > 4:
+                sleeptime = 3
             tmp = []
             tmp.append(i)
             count=0
@@ -208,5 +221,8 @@ def create_item_main(dp_list:list[deep_partition]):
 
 if __name__ == "__main__":
     from utils_storage import read_deep_partition_from_json,read_deep_partition_from_all_json
-    a = read_deep_partition_from_all_json()
+    a = read_deep_partition_from_all_json()[0:20]
+    print(len(read_deep_partition_from_all_json()))
+    a = read_deep_partition_from_json("json/deep_partitions_AWP | 九头金蛇 __.json")
+    # for i in a :
     create_item_main(a)

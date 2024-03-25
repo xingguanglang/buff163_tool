@@ -5,19 +5,6 @@ from utils_storage import read_buff_item_from_all_json, write_itemset_to_json,re
 from item import buff_item,itemset
 from itemset_operation import create_itemset_class,generate_itemset_item
 from utils_storage import read_itemset_from_all_json
-#type 1
-
-# a = create_buff_item_main()
-
-# b = create_deep_partition_from_buff_item_list(a)
-
-# c = create_item_lists_from_deep_partition_list(b)
-
-#type 2
-
-# a = create_buff_item_main()
-
-# b = create_item_lists_from_buff_item_list(a)
 
 buff_item_lists = read_buff_item_from_all_json()
 
@@ -54,12 +41,13 @@ itemset_lists = [("set_community_33","千瓦"),("set_community_32","变革"),
             ("set_vertigo","殒命大厦"),("set_inferno","炼狱小镇"),("set_militia","佣兵训练营"),
             ("set_nuke","核子危机"),("set_office","办公室"),("set_assault","仓库突击"),
                 ]
-# result = []
-# name = [x[1] for x in itemset_lists]
-# create_itemset_class(buff_item_lists,name)
-# a= read_itemset_from_json("json/sets_光谱_.json")
-# generate_itemset_item(a)
-# a = read_itemset_from_all_json()
-# for i in a:
-#     generate_itemset_item(i)
-# 
+if __name__ =="__main__":
+    result = []
+    name = [x[1] for x in itemset_lists]
+    create_itemset_class(buff_item_lists,name)
+    a= read_itemset_from_json("json/sets_光谱_.json")
+    print(a)
+    # generate_itemset_item(a)
+    a = read_itemset_from_all_json()
+    for i in a:
+        generate_itemset_item(i)

@@ -6,21 +6,28 @@ def convert_dictlist_to_tradeupitem(dictlist:list[dict]):
     result = []
     for i in dictlist:
         name = i['name']
-        # print("json/buff_items_"+name+" _.json")
-        c = read_buff_item_from_json("json/buff_items_"+name+" _.json")[0]
-        result.append(tradeupitem(c,-1,i['minwear'],i['maxwear']))
+        bfitem = read_buff_item_from_json("json/buff_items_"+name+" _.json")[0]
+        result.append(tradeupitem(bfitem,item(bfitem.name,-1,-1,-1,-1),i['minwear'],i['maxwear']))
     # print("result:",result)
     return result
 def convert_dictlist_to_item(dictlist:list[dict]):
     result = []
     for i in dictlist:
-        result.append(item(i['name'],i['wear'],i['price'],i['time']))
+        result.append(item(i['name'],i['wear'],i['price'],i['itemset'],i['time']))
     return result
 
 def convert_dictlist_to_itemset(dictlist:list[dict]):
     i = dictlist
     return create_itemset_by_listing(i['name'],i['coverts'],i['classified'],i['restricted'],i['mil_spec'],i['industrials'],i['consumers'])
     
+
+def convert_dictlist_to_itemset_all(dictlist:list[dict]):
+    result = []
+    for i in dictlist:
+        tmp=create_itemset_by_listing(i['name'],i['coverts'],i['classified'],i['restricted'],i['mil_spec'],i['industrials'],i['consumers'])
+        result.append(tmp)
+    return result
+
 
 def convert_dictlist_to_buff_item(dictlist:list[dict]):
     result = []
@@ -57,7 +64,7 @@ def write_item_to_json(items:list[item],filedir="json/",filename="items"):
             if test.wear == i:
                 if test.name not in namedic.keys():
                     namedic[test.name] = []
-                namedic[test.name].append({"name":test.name,"wear":float(test.wear),"price":test.price,"time":test.time})
+                namedic[test.name].append({"name":test.name,"wear":float(test.wear),"price":test.price,"itemset":test.itemset,"time":test.time})
     
     
     for x in namedic.keys():
@@ -183,6 +190,7 @@ def read_deep_partition_from_json(filepath="json/deep_partition.json"):
             tmp = f.read().split('\n')[:-1:]
         for x in tmp:
             result.append(json.loads(x))
+        print(result)
         result = convert_dictlist_to_deep_partition(result)
         f.close()
     except:
@@ -219,7 +227,7 @@ def read_itemset_from_all_json(filedir = "json/"):
                     result.append(json.loads(y))
             except:
                 return result
-    result = convert_dictlist_to_itemset(result)
+    result = convert_dictlist_to_itemset_all(result)
     return result
 
 
@@ -279,5 +287,6 @@ def read_buff_item_from_all_json(filedir = "json/"):
     return result
 
 if __name__ == "__main__":
-    a = read_buff_item_from_json("json/buff_items_双持贝瑞塔 | 血红蛋白 _.json")
-    write_buff_item_to_json(a)
+    # a = read_buff_item_from_json("json/buff_items_双持贝瑞塔 | 血红蛋白 _.json")
+    # write_buff_item_to_json(a)
+    1

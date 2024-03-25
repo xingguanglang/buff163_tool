@@ -20,8 +20,8 @@ def create_deep_partition_from_buff_item_list(buff_item_list:list[buff_item],int
 if __name__ == "__main__":
     a = read_buff_item_from_all_json()
     # print(len(a))
-    # for i in a:
-    #     print(i.name,i.exterior)
+    for i in a:
+        create_deep_partition_from_buff_item_list([i],-1)
     # b = read_deep_partition_from_all_json()
     # print(len(b))
 
