@@ -13,4 +13,22 @@
 ## 3.25更新
 
 1. 解决安装项目于windows系统会出现json文件命名错误的问题, 解决方法为运行transform_filename.py
-2. 
+
+
+# English Version
+
+**Here's a brief guide anyway:**
+
+1. Download the project.
+
+2. Install Python 3.11, Chrome browser, and the corresponding version of Playwright library.
+
+3. Run setting_browser.py, log in to your BUFF account, then close the browser after logging in.
+
+4. Open market_filter.py, modify the list of elements you want (leave unchanged if you don't understand), and run it. This script will generate a file named buff_item.json in the json folder.
+
+5. Open and run main.py. This script will generate a file named storage.json in the json folder.
+
+**Update on March 25**
+
+Fixed the issue where installing the project on Windows caused incorrect JSON filenames. To apply the fix, run transform_filename.py.
