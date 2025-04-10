@@ -23,11 +23,11 @@
 
 2. Install Python 3.11, Chrome browser, and the corresponding version of Playwright library.
 
-3. Run setting_browser.py, log in to your BUFF account, then close the browser after logging in.
+3. Run _setting_browser.py_, log in to your BUFF account, then close the browser after logging in.
 
-4. Open market_filter.py, modify the list of elements you want (leave unchanged if you don't understand), and run it. This script will generate a file named buff_item.json in the json folder.
+4. Open _market_filter.py_, modify the list of elements you want (leave unchanged if you don't understand), and run it. This script will generate a file named buff_item.json in the json folder.
 
-5. Open and run main.py. This script will generate a file named storage.json in the json folder.
+5. Open and run _main.py_. This script will generate a file named storage.json in the json folder.
 
 **Update on March 25**
 
